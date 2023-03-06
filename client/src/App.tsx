@@ -3,18 +3,24 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import './App.css';
-import { Home } from "./components/Home/Home";
-import LogIn from "./components/Login/Login";
-import { Register } from "./components/Register/Register";
+import Auth from "./components/auth/Auth/Auth";
+import ProtectedRoute from "./components/auth/ProtectedRoute/ProtectedRoute";
+import Chat from "./components/Chat/Chat";
+import Home from "./components/home/Home";
+import Layout from "./components/layout/Layout";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home/>}/>
-        <Route path="/login" element={<LogIn/>}/>
-        <Route path="/register" element={<Register/>}/>
+        <Route path="/login" element={<Auth authRoute="login" />} />
+        <Route path="/register" element={<Auth authRoute="register" />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout/>}>
+            <Route path="/messages" element={<Chat/>}/>
+          </Route>
+        </Route>
       </Routes>
     </Router>
   );
