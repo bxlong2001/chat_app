@@ -15,6 +15,8 @@ export const registerUser = async (registerForm: RegisterForm, dispatch: any) =>
         }else {
             dispatch(authFailed())
         }
+
+        return response.data
     } catch (error: any) {
         dispatch(authFailed())
         localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
@@ -35,6 +37,8 @@ export const loginUser = async (loginForm: LoginForm, dispatch: any) => {
         }else {
             dispatch(authFailed())
         }
+
+        return response.data
     } catch (error: any) {
         localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
         if (error.response.data)

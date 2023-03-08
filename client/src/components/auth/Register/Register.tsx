@@ -22,7 +22,7 @@ export default function Register() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const registerForm: RegisterForm = {
-      fullName: String(data.get('lastName')) + String(data.get('firstName')),
+      fullName: String(data.get('lastName')) + ' ' + String(data.get('firstName')),
       email: String(data.get('email')),
       password: String(data.get('password')),
     }
