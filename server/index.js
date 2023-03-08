@@ -18,6 +18,7 @@ const connectDB = async () => {
 connectDB()
 
 const app = express()
+const session = require('express-session')
 
 app.use(bodyParser.urlencoded({
     extended: true,

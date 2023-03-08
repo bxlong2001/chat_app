@@ -40,6 +40,7 @@ export const loginUser = async (loginForm: LoginForm, dispatch: any) => {
 
         return response.data
     } catch (error: any) {
+        dispatch(authFailed())
         localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
         if (error.response.data)
                 return error.response.data
