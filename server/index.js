@@ -4,6 +4,12 @@ const mongoose = require('mongoose')
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const authRouter = require('./routes/auth')
+const { instrument } = require('@socket.io/admin-ui')
+const io = require("socket.io")(3000, {
+    cors: {
+        origin: ['http://localhost:3001', 'https://admin.socket.io'],
+    }
+})
 
 const connectDB = async () => {
     try {
@@ -18,7 +24,6 @@ const connectDB = async () => {
 connectDB()
 
 const app = express()
-const session = require('express-session')
 
 app.use(bodyParser.urlencoded({
     extended: true,
@@ -34,3 +39,18 @@ app.use('/auth', authRouter)
 const PORT = 5000
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+
+//socket
+io.on("connection", (socket) => {
+    console.log(socket.id)
+    socket.on('send-message', (message, room) => {
+        socket.to(room).emit('receive-message', {room, message})
+    })
+
+    socket.on('join-room', (room, cb) => {
+        socket.join(room)
+        cb(`Joined ${room}`)
+    })
+})
+
+instrument(io, {auth: false})

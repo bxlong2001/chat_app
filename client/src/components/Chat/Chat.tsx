@@ -3,13 +3,45 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Item from '@mui/material/Grid';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { Avatar, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Avatar, Input, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import BoxChat from './BoxChat/BoxChat';
 import SendIcon from '@mui/icons-material/Send';
+import {io} from 'socket.io-client'
+import { useLocation } from 'react-router-dom';
+import { Message } from '../../interface';
+const socket = io('http://localhost:3000')
 
 const Chat = () => {
     const [selectInfoMess, setSelectInfoMess] = useState<boolean>(true)
+    const [message, setMessage] = useState<String>('')
+    const [displayMessage, setDisplayMessage] = useState<Message[]>([])
+    const search = useLocation().search
+    const room = new URLSearchParams(search).get('room')
+
+    React.useEffect(() => {
+        socket.emit('join-room', room, (messRoom: String) => {
+            setDisplayMessage(prev => [...prev, {status: 'send', message: messRoom}])
+        })
+    }, [room])
+
+    socket.on('connect', () => {
+        setDisplayMessage(prev => [...prev,  {status: 'send', message: `id: ${socket.id}`}])
+    })
+
+    socket.off('receive-message')
+    socket.on('receive-message', (mess) => {
+        console.log(mess)
+        setDisplayMessage(prev => [...prev, {status: 'receive', message: mess.message}])
+    })
+
+    const sendMessage = () => {
+        setDisplayMessage(prev => [...prev, {status: 'send', message: message}])
+        socket.emit('send-message', message, room)
+
+        setMessage('')
+    }
+
     return (
         <Container component="main" maxWidth="xl">
             <Grid container>
@@ -56,12 +88,22 @@ const Chat = () => {
                                 <InfoOutlinedIcon/>
                             </ListItemIcon>
                         </ListItem>
-                        <BoxChat/>
+                        {/* <BoxChat/> */}
+                        <div className='chat__content'>
+                            {displayMessage.map((mess: Message, index: number) => {
+                                return (
+                                    <div
+                                        key={index}
+                                        className={mess.status === 'receive' ? 'chat__receive' : 'chat__send'}
+                                    >
+                                        {mess.message}
+                                    </div>
+                            )})}
+                        </div>
+
                         <ListItem className='chat__footer'>
-                            <input className='chat__input' type="search" placeholder='Aa' />
-                            <ListItemIcon>
-                                <SendIcon/>
-                            </ListItemIcon>
+                            <Input className='chat__input' type="search" placeholder='Aa' value={message} onChange={(e) => setMessage(e.target.value)}/>
+                            <SendIcon onClick={sendMessage}/>
                         </ListItem>
                     </Item>
                 </Grid>

@@ -1,10 +1,15 @@
 export interface LoginForm {
-    email: string,
-    password: string
+    email: String,
+    password: String
 }
 
 export interface RegisterForm {
-    fullName: string,
-    email: string,
-    password: string
+    fullName: String,
+    email: String,
+    password: String
+}
+
+export interface Message {
+    status: 'send' | 'receive',
+    message: String
 }

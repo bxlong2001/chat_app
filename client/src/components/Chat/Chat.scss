@@ -1,5 +1,7 @@
 $navbar-height: 68.5px;
 $chatHeading-height: 72.81px;
+$chatSend-color: #0084ff;
+$chatReceive-color: #e4e6eb;
 
 .list__container {
     padding: 10px;
@@ -35,4 +37,27 @@ $chatHeading-height: 72.81px;
 
 .chat__content {
     height: calc(100vh - $chatHeading-height - $navbar-height - 46.5px);
+    display: flex;
+    flex-direction: column;
+    padding: 0px 20px;
+}
+
+@mixin chat__box {
+    border-radius: 999px;
+    line-height: 21px;
+    padding: 5px 10px;
+    max-width: 600px;
+    width: fit-content;
+}
+
+.chat__send {
+    @include chat__box();
+    background-color: $chatSend-color;
+    color: #f0f2f5;
+    align-self: end;
+}
+
+.chat__receive {
+    @include chat__box();
+    background-color: $chatReceive-color;
 }
