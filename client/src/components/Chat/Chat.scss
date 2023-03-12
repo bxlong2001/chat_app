@@ -28,18 +28,15 @@ $chatReceive-color: #e4e6eb;
     background-color: #f0f2f5;
 }
 
+.chat__container {
+    
+}
+
 .chat__heading {
     border-bottom: 0.5px solid #ccc;
 }
 
 .chat__footer {
-}
-
-.chat__content {
-    height: calc(100vh - $chatHeading-height - $navbar-height - 46.5px);
-    display: flex;
-    flex-direction: column;
-    padding: 0px 20px;
 }
 
 @mixin chat__box {
@@ -48,16 +45,34 @@ $chatReceive-color: #e4e6eb;
     padding: 5px 10px;
     max-width: 600px;
     width: fit-content;
+    float: right;
+    margin-bottom: 2px;
 }
 
-.chat__send {
-    @include chat__box();
-    background-color: $chatSend-color;
-    color: #f0f2f5;
-    align-self: end;
-}
-
-.chat__receive {
-    @include chat__box();
-    background-color: $chatReceive-color;
+.chat__box {
+    height: calc(100vh - $chatHeading-height - $navbar-height - 46.5px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    
+    &__content {
+        padding: 0px 20px;
+        flex: 1;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column-reverse;
+        scroll-behavior: smooth;
+        
+        &__send {
+            @include chat__box();
+            background-color: $chatSend-color;
+            color: #f0f2f5;
+            align-self: end;
+        }
+        
+        &__receive {
+            @include chat__box();
+            background-color: $chatReceive-color;
+        }
+    }
 }
